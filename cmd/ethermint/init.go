@@ -63,43 +63,9 @@ func initCmd(ctx *cli.Context) error {
 	if err := os.MkdirAll(keystoreDir, 0777); err != nil {
 		ethUtils.Fatalf("mkdirAll keyStoreDir: %v", err)
 	}
-
-	for filename, content := range keystoreFilesMap {
-		storeFileName := filepath.Join(keystoreDir, filename)
-		f, err := os.Create(storeFileName)
-		if err != nil {
-			log.Error("create %q err: %v", storeFileName, err)
-			continue
-		}
-		if _, err := f.Write([]byte(content)); err != nil {
-			log.Error("write content %q err: %v", storeFileName, err)
-		}
-		if err := f.Close(); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 
-// nolint=lll
-var keystoreFilesMap = map[string]string{
-	// https://github.com/tendermint/ethermint/blob/edc95f9d47ba1fb7c8161182533b5f5d5c5d619b/setup/keystore/UTC--2016-10-21T22-30-03.071787745Z--7eff122b94897ea5b0e2a9abf47b86337fafebdc
-	// OR
-	// $GOPATH/src/github.com/ethermint/setup/keystore/UTC--2016-10-21T22-30-03.071787745Z--7eff122b94897ea5b0e2a9abf47b86337fafebdc
-	"UTC--2016-10-21T22-30-03.071787745Z--7eff122b94897ea5b0e2a9abf47b86337fafebdc": `
-{
-  "address":"7eff122b94897ea5b0e2a9abf47b86337fafebdc",
-  "id":"f86a62b4-0621-4616-99af-c4b7f38fcc48","version":3,
-  "crypto":{
-    "cipher":"aes-128-ctr","ciphertext":"19de8a919e2f4cbdde2b7352ebd0be8ead2c87db35fc8e4c9acaf74aaaa57dad",
-    "cipherparams":{"iv":"ba2bd370d6c9d5845e92fbc6f951c792"},
-    "kdf":"scrypt","kdfparams":{"dklen":32,"n":262144,"p":1,"r":8,"salt":"c7cc2380a96adc9eb31d20bd8d8a7827199e8b16889582c0b9089da6a9f58e84"},
-    "mac":"ff2c0caf051ca15d8c43b6f321ec10bd99bd654ddcf12dd1a28f730cc3c13730"
-  }
-}
-`,
-}
 
 // nolint: unparam
 func invokeTendermintNoTimeout(args ...string) ([]byte, error) {
